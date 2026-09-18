@@ -1,0 +1,32 @@
+# --- Python / FastAPI backend ---
+__pycache__/
+*.py[cod]
+backend/venv/
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- SQLite databases ---
+*.db
+*.sqlite3
+
+# --- Node / Next.js frontend ---
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel
+
+# --- Logs ---
+*.log
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.tsbuildinfo
+
+# --- Local tooling ---
+.kilo/

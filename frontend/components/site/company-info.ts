@@ -1,0 +1,2 @@
+export const COMPANY_WHATSAPP = "96170858510";
+export const COMPANY_PHONE = "+961 70 858 510";

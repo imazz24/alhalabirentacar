@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Halabi Rent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --navy:#0A1628;
+  --gold:#C8A84E;
+  --gold-light:#E4D5A0;
+  --white:#F8F6F0;
+}
+
+body{
+  background:var(--navy);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-family:'Inter',sans-serif;
+  color:var(--white);
+}
+
+/* ── particle canvas ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+.particles canvas{width:100%;height:100%}
+
+/* ── ring glow ── */
+.ring-glow{
+  position:absolute;
+  width:520px;height:520px;
+  border-radius:50%;
+  background:conic-gradient(from 0deg,transparent,var(--gold),transparent,var(--gold),transparent);
+  opacity:0;
+  animation:ringGlowSpin 8s linear infinite;
+}
+@keyframes ringGlowSpin{
+  to{transform:rotate(360deg)}
+}
+
+/* ── logo wrapper ── */
+.logo-stage{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:48px;
+}
+
+.logo-ring{
+  position:relative;
+  width:440px;height:440px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transform:scale(0.4) rotate(-30deg);
+}
+
+.logo-ring img{
+  width:400px;height:400px;
+  border-radius:50%;
+  object-fit:cover;
+  position:relative;
+  z-index:1;
+  filter:drop-shadow(0 0 40px rgba(200,168,78,0.3));
+}
+
+/* outer ring line */
+.logo-ring::before{
+  content:'';
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  opacity:0.6;
+}
+.logo-ring::after{
+  content:'';
+  position:absolute;
+  inset:-20px;
+  border-radius:50%;
+  border:1px solid rgba(200,168,78,0.15);
+}
+
+/* ── text block ── */
+.text-block{
+  text-align:center;
+  opacity:0;
+  transform:translateY(30px);
+}
+
+.brand-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,52px);
+  font-weight:700;
+  letter-spacing:0.06em;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+
+.tagline{
+  font-size:clamp(13px,2vw,17px);
+  font-weight:300;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--gold-light);
+  opacity:0.75;
+}
+
+/* ── divider line ── */
+.divider{
+  width:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto;
+}
+
+/* ── CTA button ── */
+.cta{
+  opacity:0;
+  transform:translateY(20px);
+  display:flex;
+  gap:18px;
+}
+
+.cta a{
+  display:inline-block;
+  padding:14px 36px;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  border-radius:4px;
+  transition:all .35s ease;
+  position:relative;
+  overflow:hidden;
+}
+.cta a::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--gold);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .4s ease;
+  z-index:-1;
+}
+.cta a:hover{color:var(--navy)}
+.cta a:hover::before{transform:scaleX(1)}
+
+/* ── corner accent lines ── */
+.corner{position:fixed;z-index:1;opacity:0}
+.corner-tl{top:40px;left:40px;width:60px;height:60px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.corner-tr{top:40px;right:40px;width:60px;height:60px;border-top:1px solid var(--gold);border-right:1px solid var(--gold)}
+.corner-bl{bottom:40px;left:40px;width:60px;height:60px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold)}
+.corner-br{bottom:40px;right:40px;width:60px;height:60px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)}
+
+/* ── loading shimmer on logo before reveal ── */
+.shimmer{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:linear-gradient(110deg,transparent 30%,rgba(200,168,78,0.15) 50%,transparent 70%);
+  background-size:200% 100%;
+  animation:shimmer 2s ease-in-out infinite;
+  z-index:2;
+}
+@keyframes shimmer{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+
+/* ── mobile ── */
+@media(max-width:560px){
+  .logo-ring{width:260px;height:260px}
+  .logo-ring img{width:240px;height:240px}
+  .ring-glow{width:300px;height:300px}
+  .cta{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"><canvas id="pc"></canvas></div>
+
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="logo-stage">
+  <div class="logo-ring" id="logoRing">
+    <div class="shimmer" id="shimmer"></div>
+    <div class="ring-glow" id="ringGlow"></div>
+    <img src="halabi-circle.png" alt="Al Halabi Rent">
+  </div>
+
+  <div class="text-block" id="textBlock">
+    <div class="brand-name">Al Halabi Rent</div>
+    <div class="divider" id="divider"></div>
+    <div class="tagline">Premium Car Rental &middot; Lebanon</div>
+  </div>
+
+  <div class="cta" id="cta">
+    <a href="https://alhalabirent.com">Explore Fleet</a>
+    <a href="https://alhalabirent.com/contact">Contact Us</a>
+  </div>
+</div>
+
+<script>
+/* ── Particles ── */
+(function(){
+  const c=document.getElementById('pc'),x=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  resize(); addEventListener('resize',resize);
+
+  const N=80;
+  const dots=[];
+  for(let i=0;i<N;i++){
+    dots.push({
+      x:Math.random()*innerWidth,
+      y:Math.random()*innerHeight,
+      vx:(Math.random()-0.5)*0.3,
+      vy:(Math.random()-0.5)*0.3,
+      r:Math.random()*1.5+0.5,
+      a:Math.random()*0.4+0.1
+    });
+  }
+
+  function draw(){
+    x.clearRect(0,0,W,H);
+    dots.forEach(d=>{
+      d.x+=d.vx; d.y+=d.vy;
+      if(d.x<0)d.x=W; if(d.x>W)d.x=0;
+      if(d.y<0)d.y=H; if(d.y>H)d.y=0;
+      x.beginPath();
+      x.arc(d.x,d.y,d.r,0,Math.PI*2);
+      x.fillStyle=`rgba(200,168,78,${d.a})`;
+      x.fill();
+    });
+    // lines between close dots
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx=dots[i].x-dots[j].x,dy=dots[i].y-dots[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<150){
+          x.beginPath();
+          x.moveTo(dots[i].x,dots[i].y);
+          x.lineTo(dots[j].x,dots[j].y);
+          x.strokeStyle=`rgba(200,168,78,${0.06*(1-dist/150)})`;
+          x.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── GSAP-free timeline via Web Animations API ── */
+const $ = s => document.querySelector(s);
+
+const tl = [
+  // 1: corners fade in
+  { el:'.corner', opts:{opacity:[0,1],duration:1.2,easing:'ease-out'}, delay:200 },
+
+  // 2: logo scale + rotate in
+  { el:'#logoRing', opts:{
+    opacity:[0,1], transform:['scale(0.4) rotate(-30deg)','scale(1) rotate(0deg)'],
+    duration:1.6, easing:'cubic-bezier(.22,1,.36,1)'
+  }, delay:600 },
+
+  // 3: shimmer off
+  { el:'#shimmer', opts:{opacity:[1,0],duration:0.6}, delay:2200 },
+
+  // 4: glow on
+  { el:'#ringGlow', opts:{opacity:[0,0.45],duration:1.2,easing:'ease-in'}, delay:2400 },
+
+  // 5: text in
+  { el:'#textBlock', opts:{
+    opacity:[0,1], transform:['translateY(30px)','translateY(0)'],
+    duration:1, easing:'ease-out'
+  }, delay:2800 },
+
+  // 6: divider expand
+  { el:'#divider', opts:{width:['0','220px'],duration:0.8,easing:'ease-out'}, delay:3200 },
+
+  // 7: CTA in
+  { el:'#cta', opts:{
+    opacity:[0,1], transform:['translateY(20px)','translateY(0)'],
+    duration:0.8, easing:'ease-out'
+  }, delay:3600 }
+];
+
+let totalDelay = 0;
+tl.forEach(({el, opts, delay})=>{
+  const targets = document.querySelectorAll(el);
+  targets.forEach(t => {
+    t.animate([opts], { fill:'forwards', delay, duration:opts.duration||1000 });
+  });
+});
+</script>
+</body>
+</html>
