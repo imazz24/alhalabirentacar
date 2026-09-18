@@ -18,8 +18,9 @@ frontend/.next/
 frontend/out/
 frontend/.vercel
 
-# --- Logs ---
+# --- Logs / runtime ---
 *.log
+backend/uvicorn.pid
 
 # --- OS / editors ---
 .DS_Store
